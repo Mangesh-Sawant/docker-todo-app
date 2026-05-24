@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, signal, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../environments/enviroment';
+import { environment } from '../environments/environment';
 
 export interface TodoModel {
   _id: string;
