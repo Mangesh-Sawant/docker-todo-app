@@ -1,35 +1,52 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+export interface TodoModel {
+  _id: string;
+  task: string;
+  completed: boolean;
+}
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('frontend');
+export class App implements OnInit {
+  // 1. MODERN: Use inject() instead of a constructor!
+  private http = inject(HttpClient);
 
+  // 2. MODERN: All state is managed by Signals
   todos = signal<TodoModel[]>([]);
+  newTask = signal<string>('');
 
-  constructor(private http: HttpClient) { }
   ngOnInit() {
-    this.http.get<TodoModel[]>('https://todo-backend-uped.onrender.com/api/todos')
-      .subscribe({
-        next: (todoModels: TodoModel[]) => {
-          this.todos.set(todoModels);
-          console.log("api data", this.todos);
-        },
-        error: (err) => {
-          console.error("Failed to fetch todos", err);
-        }
+    this.fetchTodos();
+  }
+
+  fetchTodos() {
+    this.http.get<TodoModel[]>('http://localhost:3000/api/todos')
+      .subscribe(data => this.todos.set(data));
+  }
+
+  addTodo() {
+    // Read the signal using ()
+    if (!this.newTask().trim()) return;
+
+    this.http.post('http://localhost:3000/api/todos', { task: this.newTask() })
+      .subscribe(() => {
+        this.newTask.set(''); // Clear the input box
+        this.fetchTodos();
       });
   }
-}
 
-export interface TodoModel {
-  id: number;
-  task: string;
-  completed: boolean;
+  deleteTodo(id: string) {
+    this.http.delete(`http://localhost:3000/api/todos/${id}`)
+      .subscribe(() => {
+        this.fetchTodos();
+      });
+  }
 }

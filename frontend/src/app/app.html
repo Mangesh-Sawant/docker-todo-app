@@ -1,11 +1,27 @@
 <div style="padding: 2rem; font-family: sans-serif;">
   <h1>My Dockerized To-Do List</h1>
 
+  <!-- The Input Section -->
+  <div style="margin-bottom: 20px;">
+    <!-- [(ngModel)] binds this input directly to the 'newTask' variable -->
+    <!-- (keydown.enter) lets you press Enter to submit! -->
+    <input [ngModel]="newTask" (ngModelChange)="newTask.set($event)" (keydown.enter)="addTodo()"
+      placeholder="What needs to be done?" style="padding: 8px; font-size: 16px; width: 250px;">
+
+    <button (click)="addTodo()" style="padding: 8px 15px; margin-left: 10px; font-size: 16px;">Add</button>
+  </div>
+
   <ul>
-    @for (todo of todos(); track todo?.id) {
-    <li>
-      {{ todo.task }} - {{ todo.completed ? '✅ Done' : '❌ Pending' }}
+    <!-- The Modern Angular @for loop! -->
+    <!-- 'track todo._id' tells Angular how to efficiently update the list -->
+    @for (todo of todos(); track todo._id) {
+    <li style="margin-bottom: 10px; font-size: 18px;">
+      {{ todo.task }}
+      <button (click)="deleteTodo(todo._id)" style="margin-left: 15px; color: red; cursor: pointer;">Delete</button>
     </li>
+    } @empty {
+    <!-- This automatically shows if the array is completely empty! -->
+    <li style="color: gray;">No To-Dos yet! Add your first one above.</li>
     }
   </ul>
 </div>

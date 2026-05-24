@@ -1,6 +1,6 @@
 # 1. Use an official Node.js runtime as the base image
 # "alpine" is a very small and lightweight version of Linux
-FROM node:18-alpine
+FROM node:20-alpine
 
 # 2. Set the working directory inside the container to /app
 WORKDIR /app
