@@ -12,13 +12,12 @@ import { RouterOutlet } from '@angular/router';
 export class App {
   protected readonly title = signal('frontend');
 
-  todos: any[] = [];
+  todos: TodoModel[] = [];
   constructor(private http: HttpClient) { }
   ngOnInit() {
-    // Fetch data from our Node.js Backend container!
-    this.http.get<any[]>('https://todo-backend-uped.onrender.com/api/todos')
+    this.http.get<TodoModel[]>('https://todo-backend-uped.onrender.com/api/todos')
       .subscribe({
-        next: (data) => {
+        next: (data: TodoModel[]) => {
           this.todos = data;
           console.log(data);
         },
@@ -27,4 +26,10 @@ export class App {
         }
       });
   }
+}
+
+export interface TodoModel {
+  id: number;
+  task: string;
+  completed: boolean;
 }
