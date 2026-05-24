@@ -28,7 +28,7 @@ export class App implements OnInit {
   }
 
   fetchTodos() {
-    this.http.get<TodoModel[]>('http://localhost:3000/api/todos')
+    this.http.get<TodoModel[]>('https://todo-backend-uped.onrender.com/api/todos')
       .subscribe(data => this.todos.set(data));
   }
 
@@ -36,7 +36,7 @@ export class App implements OnInit {
     // Read the signal using ()
     if (!this.newTask().trim()) return;
 
-    this.http.post('http://localhost:3000/api/todos', { task: this.newTask() })
+    this.http.post('https://todo-backend-uped.onrender.com/api/todos', { task: this.newTask() })
       .subscribe(() => {
         this.newTask.set(''); // Clear the input box
         this.fetchTodos();
@@ -44,7 +44,7 @@ export class App implements OnInit {
   }
 
   deleteTodo(id: string) {
-    this.http.delete(`http://localhost:3000/api/todos/${id}`)
+    this.http.delete(`https://todo-backend-uped.onrender.com/api/todos/${id}`)
       .subscribe(() => {
         this.fetchTodos();
       });
