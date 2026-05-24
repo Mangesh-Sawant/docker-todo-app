@@ -23,6 +23,9 @@ jobs:
         run: docker build -t test-backend .
         # If this Docker build fails (e.g. syntax error in your JS), 
         # GitHub will stop the pipeline and mark it as FAILED!
+      - name: Deploy to Render (CD)
+        # This will ONLY run if the Docker build above succeeds!
+        run: curl -X POST ${{ secrets.BACKEND_DEPLOY_HOOK }}
 
   # ==========================================
   # JOB 2: Test the Frontend
@@ -42,3 +45,6 @@ jobs:
       - name: Build Frontend Docker Image
         working-directory: ./frontend
         run: docker build -t test-frontend .
+      - name: Deploy to Render (CD)
+        # This will ONLY run if the Docker build above succeeds!
+        run: curl -X POST ${{ secrets.FRONTEND_DEPLOY_HOOK }}
