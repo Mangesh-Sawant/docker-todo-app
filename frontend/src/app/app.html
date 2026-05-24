@@ -2,7 +2,7 @@
   <h1>My Dockerized To-Do List</h1>
 
   <ul>
-    @for (todo of todos; track todo?.id) {
+    @for (todo of todos(); track todo?.id) {
     <li>
       {{ todo.task }} - {{ todo.completed ? '✅ Done' : '❌ Pending' }}
     </li>
