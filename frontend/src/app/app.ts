@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, signal, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../environments/enviroment';
 
 export interface TodoModel {
   _id: string;
@@ -28,7 +29,7 @@ export class App implements OnInit {
   }
 
   fetchTodos() {
-    this.http.get<TodoModel[]>('https://todo-backend-uped.onrender.com/api/todos')
+    this.http.get<TodoModel[]>(`${environment.apiUrl}/api/todos`)
       .subscribe(data => this.todos.set(data));
   }
 
@@ -36,7 +37,7 @@ export class App implements OnInit {
     // Read the signal using ()
     if (!this.newTask().trim()) return;
 
-    this.http.post('https://todo-backend-uped.onrender.com/api/todos', { task: this.newTask() })
+    this.http.post(`${environment.apiUrl}/api/todos`, { task: this.newTask() })
       .subscribe(() => {
         this.newTask.set(''); // Clear the input box
         this.fetchTodos();
@@ -44,7 +45,7 @@ export class App implements OnInit {
   }
 
   deleteTodo(id: string) {
-    this.http.delete(`https://todo-backend-uped.onrender.com/api/todos/${id}`)
+    this.http.delete(`${environment.apiUrl}/api/todos/${id}`)
       .subscribe(() => {
         this.fetchTodos();
       });

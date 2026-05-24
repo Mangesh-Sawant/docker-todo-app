@@ -6,6 +6,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+require('dotenv').config({
+    path: `.env.${process.env.NODE_ENV || 'development'}`
+});
+
 const PORT = process.env.PORT || 3000;
 
 // Check if the cloud gives us a URL. If not, fallback to our local Docker database.
