@@ -1,0 +1,44 @@
+name: Full Stack CI
+
+# 1. When should this pipeline run? 
+# We want it to run every time code is pushed to the 'main' branch.
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # ==========================================
+  # JOB 1: Test the Backend
+  # ==========================================
+  test-backend:
+    runs-on: ubuntu-latest # GitHub gives us a free Linux server
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+        
+      - name: Build Backend Docker Image
+        working-directory: ./backend
+        run: docker build -t test-backend .
+        # If this Docker build fails (e.g. syntax error in your JS), 
+        # GitHub will stop the pipeline and mark it as FAILED!
+
+  # ==========================================
+  # JOB 2: Test the Frontend
+  # ==========================================
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+        
+      - name: Verify Angular Compiles
+        working-directory: ./frontend
+        run: |
+          npm install
+          npm run build --configuration=production
+          
+      - name: Build Frontend Docker Image
+        working-directory: ./frontend
+        run: docker build -t test-frontend .
